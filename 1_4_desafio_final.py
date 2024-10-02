@@ -8,32 +8,27 @@ df = pd.read_csv('Dataset_Processo_Seletivo_UFRJ_Analytica_2024-2.csv')
 
 
 
-expc_vida_1991 = df[df["ano"] == 1991]["expectativa_vida"]
-expc_vida_2010 = df[df["ano"] == 2010]["expectativa_vida"]
-
-
-
-
 #diferenca na expectativa de vida
 dif_expc_vida_num = []
-for x in range(expc_vida_1991.size):
-    dif_expc_vida_num.append(expc_vida_2010[x+54]-expc_vida_1991[x])
+for x in df[df["ano"] == 1991]["sigla_uf"]:
+    dif_expc_vida_num.append(df[(df["ano"] == 2010) & (df["sigla_uf"] == x)]["expectativa_vida"].values[0] - df[(df["ano"] == 1991) & (df["sigla_uf"] == x)]["expectativa_vida"].values[0])
 
 
 
-dif_expc_vida = pd.DataFrame({
-    "sigla_uf": ["AC", "AL", "AM","AP", "BA", "CE", "DF", "ES", "GO", "MA", "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO"],
-    "mud_expec_vida": dif_expc_vida_num
+#tabela com expectativas de vida em 1991, 2010, e mudanca entre os anos
+mudanca_expec_vida = pd.DataFrame({
+    "sigla_uf": df[df["ano"] == 1991]["sigla_uf"].values[:],
+    "expectativa_vida_1991": df[df["ano"] == 1991]["expectativa_vida"].values[:],
+    "expectativa_vida_2010": df[df["ano"] == 2010]["expectativa_vida"].values[:],
+    "dif_expectativa_vida": dif_expc_vida_num
 })
 
 
+
 #filtragem para diferencas maiores que 10
-dif_expc_vida_m_10 = dif_expc_vida[dif_expc_vida["mud_expec_vida"] >= 10]
+mudanca_expec_vida = mudanca_expec_vida[mudanca_expec_vida["dif_expectativa_vida"] >= 10]
 
 
 
-
-plt.bar(dif_expc_vida_m_10["sigla_uf"], dif_expc_vida_m_10["mud_expec_vida"])
+plt.bar(mudanca_expec_vida["sigla_uf"], mudanca_expec_vida["dif_expectativa_vida"])
 plt.show()
-
-print(dif_expc_vida)
