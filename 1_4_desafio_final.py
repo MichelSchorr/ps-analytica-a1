@@ -8,7 +8,7 @@ df = pd.read_csv('Dataset_Processo_Seletivo_UFRJ_Analytica_2024-2.csv')
 
 
 
-#diferenca na expectativa de vida
+#diferenca na expectativa de vida de 1991 para 2010 em cada uf
 dif_expc_vida_num = []
 for x in df[df["ano"] == 1991]["sigla_uf"]:
     dif_expc_vida_num.append(df[(df["ano"] == 2010) & (df["sigla_uf"] == x)]["expectativa_vida"].values[0] - df[(df["ano"] == 1991) & (df["sigla_uf"] == x)]["expectativa_vida"].values[0])
